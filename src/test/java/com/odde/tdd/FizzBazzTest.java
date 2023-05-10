@@ -7,58 +7,48 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FizzBazzTest {
 
     @Test
-    void test1() {
+    void testFizz() {
+        testFizzBazz(3,"Fizz");
+        testFizzBazz(23,"Fizz");
+    }
+
+    private void testFizzBazz(int i, String expected) {
         //Given
-        int i = 3;
+        i = 3;
         //When
         String actual = FizzBazz.fizzbass(i);
         //Then
-        String expected = "Fizz";
+        expected = "Fizz";
         assertEquals(expected, actual);
     }
 
     @Test
-    void test2() {
-        //Given
-        int i = 5;
-        //When
-        String actual = FizzBazz.fizzbass(i);
-        //Then
-        String expected = "Bazz";
-        assertEquals(expected, actual);
+    void testBazz() {
+
+        testFizzBazz(5,"Bazz");
+        testFizzBazz(51,"Bazz");
     }
 
     @Test
-    void test3() {
-        //Given
-        int i = 15;
-        //When
-        String actual = FizzBazz.fizzbass(i);
-        //Then
-        String expected = "FizzBazz";
-        assertEquals(expected, actual);
+    void testFizzBazz() {
+
+        testFizzBazz(15,"FizzBazz");
+        testFizzBazz(30,"FizzBazz");
+
     }
 
     @Test
-    void test4() {
-        //Given
-        int i = 16;
-        //When
-        String actual = FizzBazz.fizzbass(i);
-        //Then
-        String expected = "";
-        assertEquals(expected, actual);
+    void testNormalNumber() {
+
+        testFizzBazz(16,"16");
+        testFizzBazz(19,"19");
     }
 
     @Test
-    void test5() {
-        //Given
-        int i = 0;
-        //When
-        String actual = FizzBazz.fizzbass(i);
-        //Then
-        String expected = "";
-        assertEquals(expected, actual);
+    void testZero() {
+        testFizzBazz(0,"0");
     }
+
+
 
 }
