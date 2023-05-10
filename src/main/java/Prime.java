@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test1 {
+public class Prime {
 
    public static List<Integer> releaseZYS(int a){
        ArrayList<Integer> retu = new ArrayList();
