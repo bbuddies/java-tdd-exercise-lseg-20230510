@@ -32,8 +32,8 @@ public class BudgetService {
                     ).orElse(0);
         }
         return budgets.stream()
-                .filter(budget -> from.getMonth() == to.getMonth()
-                        || from.getYear() == to.getYear()
+                .filter(budget -> budget.getMonth().equals(YearMonth.from(from))
+                        || budget.getMonth().equals(YearMonth.from(to))
                         || (budget.getMonth().isAfter(YearMonth.from(from)) && budget.getMonth().isBefore(YearMonth.from(to)))).map(budget -> {
                     if (budget.getMonth().equals(YearMonth.from(from))) {
                         return (int) (budget.getAmount() * (budget.getMonth().lengthOfMonth() - from.getDayOfMonth() + 1) / budget.getMonth().lengthOfMonth());
