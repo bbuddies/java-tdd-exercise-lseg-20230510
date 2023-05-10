@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class BudgetPlanTest {
 
 
     @Test
-    void no_budget() {
+    void out_of_budgets() {
         assertEquals(0, budgetPlan.query(LocalDate.of(2022, 11, 1), LocalDate.of(2022, 12, 1)));
     }
 
@@ -57,5 +58,26 @@ class BudgetPlanTest {
     @Test
     void budget_cross_2_month() {
         assertEquals(14 * 400D/28 + 3100 + 11 * 2000D/30, budgetPlan.query(LocalDate.of(2023, 2, 15), LocalDate.of(2023, 4, 11)));
+    }
+
+    @Test
+    void start_before_budget() {
+        assertEquals(13 * 1000D/31, budgetPlan.query(LocalDate.of(2022, 12, 18), LocalDate.of(2023, 1, 13)));
+    }
+
+    @Test
+    void end_after_budget() {
+        assertEquals(9 * 2000D/30, budgetPlan.query(LocalDate.of(2023, 4, 22), LocalDate.of(2023, 5, 19)));
+    }
+
+    @Test
+    void start_after_end() {
+        assertEquals(0, budgetPlan.query(LocalDate.of(2023, 4, 22), LocalDate.of(2023, 3, 19)));
+    }
+
+    @Test
+    void no_budget() {
+        when(budgetRepo.findAll()).thenReturn(Collections.emptyList());
+        assertEquals(0, budgetPlan.query(LocalDate.of(2023, 3, 22), LocalDate.of(2023, 4, 19)));
     }
 }
