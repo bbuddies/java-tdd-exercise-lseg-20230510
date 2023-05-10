@@ -19,4 +19,12 @@ public class Budget {
     public long getAmount() {
         return amount;
     }
+
+    @Override
+    public String toString() {
+        return "Budget{" +
+                "month=" + month +
+                ", amount=" + amount +
+                '}';
+    }
 }
