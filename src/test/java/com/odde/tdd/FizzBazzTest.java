@@ -14,11 +14,9 @@ class FizzBazzTest {
 
     private void testFizzBazz(int i, String expected) {
         //Given
-        i = 3;
         //When
         String actual = FizzBazz.fizzbass(i);
         //Then
-        expected = "Fizz";
         assertEquals(expected, actual);
     }
 
@@ -26,7 +24,7 @@ class FizzBazzTest {
     void testBazz() {
 
         testFizzBazz(5,"Bazz");
-        testFizzBazz(51,"Bazz");
+        testFizzBazz(52,"Bazz");
     }
 
     @Test
