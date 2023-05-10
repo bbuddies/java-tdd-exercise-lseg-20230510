@@ -2,10 +2,14 @@ package com.odde.tdd;
 
 public class EmailNotification {
 
-    private final MailService mailService;
+    private final IMailService mailService;
 
     public EmailNotification() {
         mailService = new MailService();
+    }
+
+    public EmailNotification(IMailService mailService){
+        this.mailService = mailService;
     }
 
     public void welcome(String email) {
