@@ -39,7 +39,7 @@ public class BudgetPlan {
             if (YearMonth.of(startYear, startMonth).isBefore(budgetMonth) &&
                     YearMonth.of(endYear, endMonth).isAfter(budgetMonth)) {
                 int middleAmount = budget.getAmount();
-                sumMiddleAmount = sumMiddleAmount + middleAmount;
+                sumMiddleAmount += middleAmount;
             }
         }
         return startAmount + endAmount + sumMiddleAmount;
