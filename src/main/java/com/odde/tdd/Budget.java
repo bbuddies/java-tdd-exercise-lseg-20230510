@@ -1,6 +1,5 @@
 package com.odde.tdd;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 
 public class Budget {
@@ -26,5 +25,9 @@ public class Budget {
                 "month=" + month +
                 ", amount=" + amount +
                 '}';
+    }
+
+    int getDays() {
+        return month.lengthOfMonth();
     }
 }

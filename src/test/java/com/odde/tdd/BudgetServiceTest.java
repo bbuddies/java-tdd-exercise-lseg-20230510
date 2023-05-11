@@ -25,38 +25,38 @@ class BudgetServiceTest {
 
     @Test
     public void start_date_is_after_end_date(){
-        Assertions.assertEquals(0,budgetService.budget(LocalDate.of(2023,5,10), LocalDate.of(2023,5,9)));
+        Assertions.assertEquals(0,budgetService.budget(new Period(LocalDate.of(2023, 5, 10), LocalDate.of(2023, 5, 9))));
     }
 
     @Test
     public void out_of_existing_budgets(){
-        Assertions.assertEquals(0,budgetService.budget(LocalDate.of(2023,3,10), LocalDate.of(2023,3,12)));
+        Assertions.assertEquals(0,budgetService.budget(new Period(LocalDate.of(2023, 3, 10), LocalDate.of(2023, 3, 12))));
     }
 
     @Test
     public void within_same_month(){
-        Assertions.assertEquals(100*14,budgetService.budget(LocalDate.of(2023,5,2), LocalDate.of(2023,5,15)));
+        Assertions.assertEquals(100*14,budgetService.budget(new Period(LocalDate.of(2023, 5, 2), LocalDate.of(2023, 5, 15))));
     }
 
     @Test
     public void one_day(){
-        Assertions.assertEquals(100,budgetService.budget(LocalDate.of(2023,5,2), LocalDate.of(2023,5,2)));
+        Assertions.assertEquals(100,budgetService.budget(new Period(LocalDate.of(2023, 5, 2), LocalDate.of(2023, 5, 2))));
     }
 
     @Test
     public void across_multiple_months(){
-        Assertions.assertEquals(100*30 + 300 + 310 + 100*15,budgetService.budget(LocalDate.of(2023,5,2), LocalDate.of(2023,8,15)));
+        Assertions.assertEquals(100*30 + 300 + 310 + 100*15,budgetService.budget(new Period(LocalDate.of(2023, 5, 2), LocalDate.of(2023, 8, 15))));
     }
 
     @Test
     public void start_before_budget(){
-        Assertions.assertEquals(100 * 15,budgetService.budget(LocalDate.of(2023,4,2), LocalDate.of(2023,5,15)));
+        Assertions.assertEquals(100 * 15,budgetService.budget(new Period(LocalDate.of(2023, 4, 2), LocalDate.of(2023, 5, 15))));
     }
 
 
     @Test
     public void end_after_budget(){
-        Assertions.assertEquals(100*30,budgetService.budget(LocalDate.of(2023,8,2), LocalDate.of(2023,9,15)));
+        Assertions.assertEquals(100*30,budgetService.budget(new Period(LocalDate.of(2023, 8, 2), LocalDate.of(2023, 9, 15))));
     }
 
     @Test
@@ -67,7 +67,7 @@ class BudgetServiceTest {
         list.add(new Budget(YearMonth.of(2023,8), 3100));
         list.add(new Budget(YearMonth.of(2023,6), 300));
         when(budgetRepo.findAll()).thenReturn(list);
-        Assertions.assertEquals(10*12 + 100*13,budgetService.budget(LocalDate.of(2023,7,20), LocalDate.of(2023,8,13)));
+        Assertions.assertEquals(10*12 + 100*13,budgetService.budget(new Period(LocalDate.of(2023, 7, 20), LocalDate.of(2023, 8, 13))));
     }
 
     @Test
@@ -76,13 +76,13 @@ class BudgetServiceTest {
         list.add(new Budget(YearMonth.of(2023,5), 3100));
         list.add(new Budget(YearMonth.of(2023,8), 3100));
         when(budgetRepo.findAll()).thenReturn(list);
-        Assertions.assertEquals(100*2 + 100*3,budgetService.budget(LocalDate.of(2023,5,30), LocalDate.of(2023,8,3)));
+        Assertions.assertEquals(100*2 + 100*3,budgetService.budget(new Period(LocalDate.of(2023, 5, 30), LocalDate.of(2023, 8, 3))));
     }
 
     @Test
     void no_budget() {
         when(budgetRepo.findAll()).thenReturn(Collections.emptyList());
-        Assertions.assertEquals(0,budgetService.budget(LocalDate.of(2023,5,30), LocalDate.of(2023,8,3)));
+        Assertions.assertEquals(0,budgetService.budget(new Period(LocalDate.of(2023, 5, 30), LocalDate.of(2023, 8, 3))));
     }
 
     private List<Budget> mockBudget() {

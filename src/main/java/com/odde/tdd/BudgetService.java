@@ -2,48 +2,48 @@ package com.odde.tdd;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Comparator;
 import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class BudgetService {
-
     private final BudgetRepo budgetRepo;
-
     public BudgetService(BudgetRepo budgetRepo) {
         this.budgetRepo = budgetRepo;
     }
 
-    public int budget(LocalDate from, LocalDate to) {
-
-        if(from.isAfter(to)){
+    public int budget(Period period) {
+        if (period.getFrom().isAfter(period.getTo())) {
             return 0;
         }
+        YearMonth fromMonth = YearMonth.from(period.getFrom());
+        YearMonth toMonth = YearMonth.from(period.getTo());
         List<Budget> budgets = budgetRepo.findAll();
-        budgets.sort(Comparator.comparing(Budget::getMonth));
-        if (from.getMonth() == to.getMonth() && from.getYear() == to.getYear()) {
+        if (fromMonth.equals(toMonth)) {
             return budgets.stream()
-                    .filter(budget -> budget.getMonth().getYear() == from.getYear() && budget.getMonth().getMonth() == from.getMonth())
+                    .filter(budget -> budget.getMonth().equals(fromMonth))
                     .findFirst()
                     .map(budget ->
-                            (int) (budget.getAmount() * (DAYS.between(from, to) + 1) / budget.getMonth().lengthOfMonth())
+                            getAmountOfPeriod(new Period(period.getFrom(), period.getTo()), budget)
                     ).orElse(0);
         }
         return budgets.stream()
-                .filter(budget -> budget.getMonth().equals(YearMonth.from(from))
-                        || budget.getMonth().equals(YearMonth.from(to))
-                        || (budget.getMonth().isAfter(YearMonth.from(from)) && budget.getMonth().isBefore(YearMonth.from(to)))).map(budget -> {
-                    if (budget.getMonth().equals(YearMonth.from(from))) {
-                        return (int) (budget.getAmount() * (budget.getMonth().lengthOfMonth() - from.getDayOfMonth() + 1) / budget.getMonth().lengthOfMonth());
+                .filter(budget -> budget.getMonth().equals(fromMonth)
+                        || budget.getMonth().equals(toMonth)
+                        || (budget.getMonth().isAfter(fromMonth) && budget.getMonth().isBefore(toMonth))).map(budget -> {
+                    if (budget.getMonth().equals(fromMonth)) {
+                        LocalDate endOfBudget = budget.getMonth().atEndOfMonth();
+                        return getAmountOfPeriod(new Period(period.getFrom(), endOfBudget), budget);
                     }
-                    if (budget.getMonth().equals(YearMonth.from(to))) {
-                        return (int) (budget.getAmount() * to.getDayOfMonth() / budget.getMonth().lengthOfMonth());
+                    if (budget.getMonth().equals(toMonth)) {
+                        LocalDate startOfBudget = budget.getMonth().atDay(1);
+                        return getAmountOfPeriod(new Period(startOfBudget, period.getTo()), budget);
                     }
-                    return (int)budget.getAmount();
+                    return (int) budget.getAmount();
                 }).reduce(Integer::sum).orElse(0);
-
-
     }
+
+    private int getAmountOfPeriod(Period period, Budget budget) {
+        return (int) (budget.getAmount() * period.getDays() / budget.getDays());
+    }
+
 }
