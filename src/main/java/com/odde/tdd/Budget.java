@@ -30,4 +30,12 @@ public class Budget {
     int getDays() {
         return month.lengthOfMonth();
     }
+
+    private Period getPeriod() {
+        return new Period(month.atDay(1), month.atEndOfMonth());
+    }
+
+    int getOverlappingAmount(Period period) {
+        return (int) (amount * period.getOverlappingDays(getPeriod()) / getDays());
+    }
 }
