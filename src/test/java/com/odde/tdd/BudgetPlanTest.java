@@ -1,5 +1,6 @@
 package com.odde.tdd;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -21,19 +22,18 @@ class BudgetPlanTest {
 
     @Test
     void single_middle_month_budget() {
-        BudgetRepo repo = mock(BudgetRepo.class);
-        List<Budget> budgets = new ArrayList<>();
-        budgets.add(new Budget(YearMonth.of(2023,5),3100));
-        budgets.add(new Budget(YearMonth.of(2023,6),300));
-        budgets.add(new Budget(YearMonth.of(2023,7),310));
-        budgets.add(new Budget(YearMonth.of(2023,8),3100));
-        when(repo.findAll()).thenReturn(budgets);
-        BudgetPlan plan = new BudgetPlan(repo);
+        BudgetPlan plan = getBudgetPlan();
         assertEquals(1540.0, plan.query(LocalDate.of(2023, 5, 20), LocalDate.of(2023, 7, 4)));
     }
 
     @Test
     void multiple_middle_months_budget() {
+        BudgetPlan plan = getBudgetPlan();
+        assertEquals(2210.0, plan.query(LocalDate.of(2023, 5, 20), LocalDate.of(2023, 8, 4)));
+    }
+
+    @NotNull
+    private BudgetPlan getBudgetPlan() {
         BudgetRepo repo = mock(BudgetRepo.class);
         List<Budget> budgets = new ArrayList<>();
         budgets.add(new Budget(YearMonth.of(2023,5),3100));
@@ -41,7 +41,6 @@ class BudgetPlanTest {
         budgets.add(new Budget(YearMonth.of(2023,7),310));
         budgets.add(new Budget(YearMonth.of(2023,8),3100));
         when(repo.findAll()).thenReturn(budgets);
-        BudgetPlan plan = new BudgetPlan(repo);
-        assertEquals(2210.0, plan.query(LocalDate.of(2023, 5, 20), LocalDate.of(2023, 8, 4)));
+        return new BudgetPlan(repo);
     }
 }
