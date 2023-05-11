@@ -20,15 +20,11 @@ class BudgetPlanTest {
     @BeforeEach
     void init() {
         budgetRepo = mock(BudgetRepo.class);
-        Budget b1 = new Budget(YearMonth.of(2023, 1), 1000L);
-        Budget b2 = new Budget(YearMonth.of(2023, 2), 400L);
-        Budget b3 = new Budget(YearMonth.of(2023, 3), 3100L);
-        Budget b4 = new Budget(YearMonth.of(2023, 4), 2000L);
         List<Budget> budgetList = new ArrayList<>();
-        budgetList.add(b1);
-        budgetList.add(b2);
-        budgetList.add(b3);
-        budgetList.add(b4);
+        budgetList.add(new Budget(YearMonth.of(2023, 1), 1000L));
+        budgetList.add(new Budget(YearMonth.of(2023, 2), 400L));
+        budgetList.add(new Budget(YearMonth.of(2023, 3), 3100L));
+        budgetList.add(new Budget(YearMonth.of(2023, 4), 2000L));
         when(budgetRepo.findAll()).thenReturn(budgetList);
 
         budgetPlan = new BudgetPlan(budgetRepo);
@@ -36,8 +32,13 @@ class BudgetPlanTest {
 
 
     @Test
-    void out_of_budgets() {
+    void end_before_budgets() {
         assertEquals(0, budgetPlan.query(LocalDate.of(2022, 11, 1), LocalDate.of(2022, 12, 1)));
+    }
+
+    @Test
+    void start_after_budgets() {
+        assertEquals(0, budgetPlan.query(LocalDate.of(2023, 5, 1), LocalDate.of(2023, 5, 11)));
     }
 
     @Test
@@ -66,8 +67,18 @@ class BudgetPlanTest {
     }
 
     @Test
+    void start_before_budget_cross_month() {
+        assertEquals(13 * 400D/28 + 1000, budgetPlan.query(LocalDate.of(2022, 12, 18), LocalDate.of(2023, 2, 13)));
+    }
+
+    @Test
     void end_after_budget() {
         assertEquals(9 * 2000D/30, budgetPlan.query(LocalDate.of(2023, 4, 22), LocalDate.of(2023, 5, 19)));
+    }
+
+    @Test
+    void end_after_budget_cross_month() {
+        assertEquals(10 * 3100D/31 + 2000, budgetPlan.query(LocalDate.of(2023, 3, 22), LocalDate.of(2023, 5, 19)));
     }
 
     @Test
